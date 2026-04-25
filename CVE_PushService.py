@@ -75,10 +75,19 @@ def fetch_nvd_data(use_recent=True):
         logger.error(f"Failed to fetch NVD data: {str(e)}")
         return []
 
+
 # 检查漏洞是否在最近24小时内发布
+def parse_nvd_datetime(published_date_str):
+    normalized = published_date_str.strip()
+    parsed_dt = datetime.fromisoformat(normalized)
+    if parsed_dt.tzinfo is not None:
+        return parsed_dt.astimezone(timezone.utc).replace(tzinfo=None)
+    return parsed_dt
+
+
 def is_recent(published_date_str):
     try:
-        published_dt = datetime.strptime(published_date_str, "%Y-%m-%dT%H:%M:%S.%f")
+        published_dt = parse_nvd_datetime(published_date_str)
         time_diff = datetime.utcnow() - published_dt
         return time_diff.total_seconds() <= 24 * 3600
     except Exception as e:
