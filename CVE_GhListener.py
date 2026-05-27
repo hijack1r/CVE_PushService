@@ -37,16 +37,6 @@ def load_blacklist():
 
 BLACKLIST = load_blacklist()
 
-# 模板加载函数
-def load_template(file_path: str) -> str:
-    """加载通知模板"""
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            return file.read()
-    except Exception as e:
-        logger.error(f"Error loading template from {file_path}: {str(e)}")
-        return ""
-
 def init_db():
     """初始化数据库，创建必要的表"""
     conn = sqlite3.connect(DB_PATH)
